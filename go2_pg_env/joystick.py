@@ -568,7 +568,7 @@ class Joystick(go2_base.Go2Env):
     #     del current_command
     #     return self._cmd_min, self._cmd_max, self._cmd_b
 
-    def _student_stage2_sampling_profile(self, current_command: jax.Array) -> tuple[jax.Array, jax.Array, jax.Array]:
+    def _student_stage2_sampling_profile(self, current_command):
         del current_command
         cmd_min = jp.array([-0.6, -0.2, -0.6])
         cmd_max = jp.array([ 0.6,  0.2,  0.6])
