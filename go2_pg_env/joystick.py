@@ -549,25 +549,41 @@ class Joystick(go2_base.Go2Env):
             return self._student_stage2_sampling_profile(current_command)
         return self._cmd_min, self._cmd_max, self._cmd_b
 
+    # def _student_stage2_sampling_profile(self, current_command: jax.Array) -> tuple[jax.Array, jax.Array, jax.Array]:
+    #     """Homework seam for stage_2 command sampling.
+
+    #     TODO(student): keep stage_1 as the fixed forward-only baseline, and use
+    #     stage_2 to expand the command distribution beyond `{stand, +vx}`.
+
+    #     The current baseline intentionally returns the same forward-only profile
+    #     as stage_1, so the public benchmark still exposes missing lateral / yaw
+    #     capability. A good stage_2 implementation should eventually use the
+    #     stored `self._student_stage2_goal_*` values below.
+
+    #     Suggested approach:
+    #     1. keep the baseline forward-only ranges as the starting point
+    #     2. widen the stage_2 sampling range toward `self._student_stage2_goal_*`
+    #     3. increase the probability of non-zero `vy` and `yaw_rate` commands
+    #     """
+    #     del current_command
+    #     return self._cmd_min, self._cmd_max, self._cmd_b
+
     def _student_stage2_sampling_profile(self, current_command: jax.Array) -> tuple[jax.Array, jax.Array, jax.Array]:
-        """Homework seam for stage_2 command sampling.
-
-        TODO(student): keep stage_1 as the fixed forward-only baseline, and use
-        stage_2 to expand the command distribution beyond `{stand, +vx}`.
-
-        The current baseline intentionally returns the same forward-only profile
-        as stage_1, so the public benchmark still exposes missing lateral / yaw
-        capability. A good stage_2 implementation should eventually use the
-        stored `self._student_stage2_goal_*` values below.
-
-        Suggested approach:
-        1. keep the baseline forward-only ranges as the starting point
-        2. widen the stage_2 sampling range toward `self._student_stage2_goal_*`
-        3. increase the probability of non-zero `vy` and `yaw_rate` commands
-        """
+        """Stage 2: 扩展到多方向指令"""
         del current_command
-        return self._cmd_min, self._cmd_max, self._cmd_b
+    # 直接使用 goal 范围（已经在 course_config.json 里配置好了）
+    # goal_min = [-1.0, -0.4, -1.0]
+    # goal_max = [1.0,  0.4,  1.0]
+    # goal_b   = [0.9,  0.25, 0.5]  ← 这是goal里的值，但我们要提高vy和yaw的激活概率
 
+        cmd_min = self._student_stage2_goal_min   # [-1.0, -0.4, -1.0]
+        cmd_max = self._student_stage2_goal_max   # [1.0,  0.4,  1.0]
+    
+    # 提高 vy 和 yaw_rate 的激活概率
+        cmd_b = jp.array([0.9, 0.8, 0.8])
+    #                  vx   vy  yaw  ← vy和yaw都提高到0.8
+    
+        return cmd_min, cmd_max, cmd_b
     def sample_command(self, rng: jax.Array, current_command: jax.Array) -> jax.Array:
         rng, y_rng, w_rng, z_rng = jax.random.split(rng, 4)
         cmd_min, cmd_max, cmd_keep_prob = self._command_sampling_profile(current_command)
