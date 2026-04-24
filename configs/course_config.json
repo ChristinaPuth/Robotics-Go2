@@ -66,10 +66,10 @@
   "name": "stage_2",
   "num_timesteps": 10000000,
   "command_range": {
-    "min": [-0.35, -0.10, -0.35],
-    "max": [0.55, 0.10, 0.35]
+    "min": [-0.6, -0.2, -0.6],
+    "max": [0.6, 0.2, 0.6]
   },
-  "command_keep_prob": [1.0, 0.25, 0.50],
+  "command_keep_prob": [1.0, 0.35, 0.45],
   "student_stage2_goal": {
     "command_range": {
       "min": [-0.6, -0.2, -0.6],
@@ -78,12 +78,10 @@
     "command_keep_prob": [1.0, 0.35, 0.45]
   },
   "reward_scales": {
-    "tracking_lin_vel": 1.0,
-    "tracking_ang_vel": 1.2,
-    "action_rate": -0.015,
-    "energy": -0.001,
-    "feet_slip": -0.08,
-    "pose": 0.3
+    "tracking_ang_vel": 1.0,
+    "tracking_lin_vel": 1.2,
+    "action_rate": -0.02,
+    "energy": -0.0015
   },
   "restore_previous_stage_checkpoint": true
 },
