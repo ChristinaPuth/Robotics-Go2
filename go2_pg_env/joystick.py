@@ -570,10 +570,11 @@ class Joystick(go2_base.Go2Env):
 
     def _student_stage2_sampling_profile(self, current_command):
         del current_command
-        cmd_min = jp.array([-0.6, -0.2, -0.6])
-        cmd_max = jp.array([ 0.6,  0.2,  0.6])
-        cmd_b   = jp.array([ 1.0,  0.35, 0.35])
-        return cmd_min, cmd_max, cmd_b
+        return (
+            self._student_stage2_goal_min,
+            self._student_stage2_goal_max,
+            self._student_stage2_goal_b,
+        )
     def sample_command(self, rng: jax.Array, current_command: jax.Array) -> jax.Array:
         rng, y_rng, w_rng, z_rng = jax.random.split(rng, 4)
         cmd_min, cmd_max, cmd_keep_prob = self._command_sampling_profile(current_command)
